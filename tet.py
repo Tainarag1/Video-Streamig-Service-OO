@@ -208,7 +208,7 @@ class Sistema:
         return None
 
 
-    def listar_videos(self, id_plano):
+    def listar_videos(self, nome, id_plano):
         self.limpar_interface()
 
         frame = Frame(self.janela)
@@ -220,13 +220,26 @@ class Sistema:
         if id_plano == '1':
             self.adicionar_botao_link(frame, "Vídeo Poligonos", "https://www.youtube.com/watch?v=5e8Ua4RhhXg")
             self.adicionar_botao_link(frame, "Vídeo Ângulos e Retas", "https://www.youtube.com/watch?v=o-srrvPTo0Y")
+
+            texto = Label(self.janela, text=f"Ou escolha uma das opções:")
+            texto.grid(column=0, row=3, padx=10, pady=10)
+
+
             botao3 = Button(self.janela, text="Sair", command=self.janela.quit)
-            botao3.grid(column=0, row=4, padx=10, pady=10)
+            botao3.grid(column=0, row=5, padx=10, pady=10)
+            botao2 = Button(self.janela, text="Voltar ao menu", command=lambda event=None: self.menu(nome))
+            botao2.grid(column=0, row=4, padx=10, pady=10)
         else:
             self.adicionar_botao_link(frame, "Vídeo Equação do Segundo Grau", "https://www.youtube.com/watch?v=1VjauwyHV0o")
             self.adicionar_botao_link(frame, "Vídeo Sistemas de Equações", "https://www.youtube.com/watch?v=YTJPkVMdKho")
+            texto = Label(self.janela, text=f"Ou escolha uma das opções:")
+            texto.grid(column=0, row=3, padx=10, pady=10)
+
+
             botao3 = Button(self.janela, text="Sair", command=self.janela.quit)
-            botao3.grid(column=0, row=4, padx=10, pady=10)
+            botao3.grid(column=0, row=5, padx=10, pady=10)
+            botao2 = Button(self.janela, text="Voltar ao menu", command=lambda event=None: self.menu(nome))
+            botao2.grid(column=0, row=4, padx=10, pady=10)            
 
     def adicionar_botao_link(self, frame, texto, url):
         botao = Button(frame, text=texto, command=lambda: self.abrir_link(url))
@@ -238,7 +251,7 @@ class Sistema:
         webbrowser.open(url)
 
 
-    def escolher_plano(self, id_usuario):
+    def escolher_plano(self, nome, id_usuario):
         self.limpar_interface()
         # Criando a mensagem de boas-vindas
         texto = Label(self.janela, text=f"Esses são os planos disponíveis")
@@ -259,7 +272,7 @@ class Sistema:
         
         plano_usuario = Usuario_plano(id_plano, id_usuario)
         self.Usuario_plano.append(plano_usuario)
-        id_plano.bind('<Return>', lambda event: self.listar_videos(id_plano.get()))
+        id_plano.bind('<Return>', lambda event: self.listar_videos(nome, id_plano.get()))
 
         
         return id_plano
@@ -271,7 +284,7 @@ class Sistema:
         texto = Label(self.janela, text=f"Seja Bem-vindo(a), {nome}! Seu cadastro foi efetuado!")
         texto.grid(column=0, row=1, padx=10, pady=10)
         # Criando os botões
-        botao1 = Button(self.janela, text="Escolher Plano", command=lambda event=None: self.escolher_plano(id_usuario))
+        botao1 = Button(self.janela, text="Escolher Plano", command=lambda event=None: self.escolher_plano(nome, id_usuario))
         botao1.grid(column=0, row=2, padx=10, pady=10)
 
         botao2 = Button(self.janela, text="Acessar Conta", command=lambda event=None: self.acessar_usuario(nome))
