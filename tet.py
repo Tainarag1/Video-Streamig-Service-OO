@@ -124,31 +124,38 @@ class Sistema:
         email_entry = Entry(self.janela)
         email_entry.grid(column=0, row=1, padx=10, pady=10)
 
-        # Conferindo se o email já está cadastrado
-        if self.procurar_usuario(email_entry.get) is None:
-                email_entry.bind('<Return>', lambda event: self.menu_3(nome))
-        else:
-                for usu in self.Usuario:
-                        if usu.email == email_entry.get():
-                                self.limpar_interface()
-                                texto = Label(self.janela, text="Digite sua senha:")
-                                texto.grid(column=0, row=0, padx=10, pady=10)
+        def validar_email(event=None):
+                email = email_entry.get()
+                usuario_encontrado = self.procurar_usuario(email)
 
-                                senha_entry = Entry(self.janela)
-                                senha_entry.grid(column=0, row=1, padx=10, pady=10)
+                if usuario_encontrado:
+                        self.limpar_interface()
+                        texto = Label(self.janela, text="Digite sua senha:")
+                        texto.grid(column=0, row=0, padx=10, pady=10)
 
-                                if usu.senha == senha_entry.get():
-                                        return usu
+                        senha_entry = Entry(self.janela, show="*")  # Mostrar asteriscos para senhas
+                        senha_entry.grid(column=0, row=1, padx=10, pady=10)
+
+                        def validar_senha(event=None):
+                                senha = senha_entry.get()
+                                if usuario_encontrado.senha == senha:
+                                    self.listar_videos(nome, usuario_encontrado.id)
+
                                 else:
                                         texto = Label(self.janela, text="Senha incorreta. Tente novamente.")
                                         texto.grid(column=0, row=2, padx=10, pady=10)
-                                        email_entry.bind('<Return>', lambda event: self.menu_3(nome))
-                                        break  # Sair do loop for quando a senha é incorreta
-                        else:
-                                texto = Label(self.janela, text="Email incorreto. Tente novamente.")
-                                texto.grid(column=0, row=3, padx=10, pady=10)
-                                self.acessar_usuario(nome)  # Usar self.acessar_usuario para chamada recursiva
+                                        senha_entry.delete(0, END)  # Limpar campo de senha
+                                        senha_entry.focus()
 
+                        senha_entry.bind('<Return>', validar_senha)
+
+                else:
+                        texto = Label(self.janela, text="Email não encontrado. Tente novamente ou crie uma conta.")
+                        texto.grid(column=0, row=2, padx=10, pady=10)
+                        email_entry.delete(0, END)  # Limpar campo de email
+                        email_entry.focus()
+
+        email_entry.bind('<Return>', validar_email)
 
     def menu_3(self, nome):
         self.limpar_interface()
